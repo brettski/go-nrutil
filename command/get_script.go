@@ -16,7 +16,7 @@ type GetScriptCommand struct {
 func (c *GetScriptCommand) Help() string {
 	helpText := `
 	getscript [arg0] [arg1]
-	  -id    ID of Synthetic. Overrides yaml config
+	  -id    ID of Synthetic. Overrides config file
 	`
 
 	return helpText
@@ -28,7 +28,7 @@ func (c *GetScriptCommand) Run(args []string) int {
 	cmdFlags.Usage = func() {
 		fmt.Println(c.Help())
 	}
-	cmdFlags.StringVar(&c.ID, "id", "", "The id of the Synthetic to get the script from. Ignores yaml")
+	cmdFlags.StringVar(&c.ID, "id", "", "The id of the Synthetic to get the script from. Ignores config file")
 	if err := cmdFlags.Parse(args); err != nil {
 		return 1
 	}
