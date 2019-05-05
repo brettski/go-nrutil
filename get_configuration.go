@@ -43,6 +43,20 @@ func GetConfigurationInfo() (*Config, error) {
 	return nrconfig, nil
 }
 
+// Check verifies that configuration has expected, needed fields
+func (c *Config) Check() error{
+	// Not sure if this is the best approach, but lets see
+	var errs string
+	if len(c.NrAdminKey) < 10 {
+		errs += fmt.Sprintf("NrAdminKey not set or too short\n")
+	}
+
+	if len(errs) > 0 {
+		return errors.New(errs)
+	}
+	return nil
+}
+
 func createBaseYamlFile(yamlfile string) error {
 	ymldata := []byte("---\nnradminkey: <your-admin-key>\nsyntheticmonitors:\n  - guid-of-monitor-1-23456\n  - guid-of-monitor-2-34567\n  - guid-of-monitor-n-opqrs")
 
