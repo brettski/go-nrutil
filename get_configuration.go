@@ -1,7 +1,6 @@
 package nrutil
 
 import (
-	"errors"
 	"fmt"
 	"io/ioutil"
 	"os"
@@ -52,7 +51,7 @@ func (c *Config) Check() error{
 	}
 
 	if len(errs) > 0 {
-		return errors.New(errs)
+		return fmt.Errorf("Configuration file check errors:\n%s", errs)
 	}
 	return nil
 }
@@ -62,19 +61,17 @@ func createBaseYamlFile(yamlfile string) error {
 
 	f, err := os.Create(yamlfile)
 	if err != nil {
-		return errors.New("Unable to create yaml file in home directory: " + err.Error())
+		return fmt.Errorf("Unable to create yaml file in home directory: %s", err.Error())
 	}
 	defer f.Close()
 	if _, err := f.Write(ymldata); err != nil {
-		return errors.New("Error writing data to yaml file in home directory: " + err.Error())
+		return fmt.Errorf("Error writing data to yaml file in home directory: %s", err.Error())
 	}
 
-	msg := fmt.Sprintf(`
+	return fmt.Errorf(`
     The configuration yaml file was not in place.
     A new one is now at %s.
     Please add you New Relic User Admin key and Synthetic monitor GUID's to manage.
     Once set, run this again.
     `, yamlfile)
-
-	return errors.New(msg)
 }
