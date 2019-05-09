@@ -9,6 +9,8 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
+	"encoding/base64"
+	"encoding/json"
 
 	nrutil "github.com/brettski/go-nrutil"
 )
@@ -51,5 +53,16 @@ func GetScript(id string) {
 	}
 
 	log.Printf("Encoded Script:\n%s\n", encodedScript)
+
+	var scriptPayload ScriptPayload
+	if err := json.Unmarshal(encodedScript, &scriptPayload); err != nil {
+		log.Fatal("Unable to unmarshal json: ", err)
+	}
+
+	decodedScript, err := base64.StdEncoding.DecodeString(scriptPayload.ScriptText)
+		if err != nil {
+			log.Fatal("Error decoding base64 string from api", err)
+		}
+	log.Printf("Decoded Script:\n%s\n", decodedScript)
 
 }
