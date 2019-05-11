@@ -1,30 +1,31 @@
 package main
 
 import (
-	"fmt"
 	"os"
 
-	"github.com/mitchellh/cli"
+	cli "github.com/jawher/mow.cli"
 )
 
 func main() {
 
-	c := cli.NewCLI("nrutil", "0.1.0")
-	c.Args = os.Args[1:]
-	c.Commands = map[string]cli.CommandFactory{
-		"getscript": func() (cli.Command, error) {
-			return &GetScriptCommand{}, nil
-		},
-		"setscript": func() (cli.Command, error) {
-			return &SetScriptCommand{}, nil
-		},
-	}
+	app := cli.App("nrutil", "New Relic Synthetics utility")
+	app.Command("getscript", "Retrieves script from Synthetic monitor to local file", cmdGetScript)
+	app.Command("setscript", "Saves script from local file to Synthetic monitor", cmdSetScript)
 
-	exitStatus, err := c.Run()
+	app.Run(os.Args)
 
-	if err != nil {
-		fmt.Println(err)
-	}
+	//c := cli.NewCLI("nrutil", "0.1.0")
+	//c.Args = os.Args[1:]
+	/*
+		c.Commands = map[string]cli.CommandFactory{
+			"getscript": func() (cli.Command, error) {
+				return &GetScriptCommand{}, nil
+			},
+			"setscript": func() (cli.Command, error) {
+				return &SetScriptCommand{}, nil
+			},
+		}
+	*/
+	//exitStatus, err := c.Run()
 
-	os.Exit(exitStatus)
 }
