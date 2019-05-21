@@ -4,6 +4,8 @@ package nrrequest
 import (
 	"log"
 	"net/http"
+
+	"github.com/brettski/go-nrutil"
 )
 
 // Request struct is a simple wrapper around the net/http library
@@ -31,12 +33,23 @@ func NewRequest() (*Request, error) {
 
 }
 
-func (r *Request) get(url string) (*http.Response, error) {
+// Get performs a GET request for provided URL
+func (r *Request) Get(url string) (*http.Response, error) {
+
+	config, err := nrutil.GetConfigurationInfo()
+	if err != nil {
+		return nil, err
+	}
+	if err := config.Check(); err != nil {
+		return nil, err
+	}
 
 	req, err := http.NewRequest("GET", url, nil)
 	if err != nil {
 		log.Fatalf("Error creating NewRequest: %s", err)
 	}
+	req.Header.Add("X-Api-Key", config.NrAdminKey)
+	req.Header.Add("Content-Type", "application/json")
 
 	resp, err := r.client.Do(req)
 	if err != nil {

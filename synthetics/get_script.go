@@ -5,14 +5,14 @@
 package synthetics
 
 import (
+	"encoding/base64"
+	"encoding/json"
 	"fmt"
 	"io/ioutil"
 	"log"
-	"net/http"
-	"encoding/base64"
-	"encoding/json"
 
 	nrutil "github.com/brettski/go-nrutil"
+	"github.com/brettski/go-nrutil/nrrequest"
 )
 
 // GetScript start process for getting a script from New Relic Synthetics
@@ -29,19 +29,29 @@ func GetScript(id string) {
 	baseURL := nrutil.GetBaseConfiguration().NrBaseSyntheticsAPIURL
 	url := baseURL + fmt.Sprintf("monitors/%s/script", id)
 	log.Println(url)
-	req, err := http.NewRequest("GET", url, nil)
+
+	request, _ := nrrequest.NewRequest()
+
+	resp, err := request.Get(url)
 	if err != nil {
-		log.Fatal("Error settin gup request:" + err.Error())
-		return
+		log.Fatalf("Request error %s", err)
 	}
-	req.Header.Add("X-Api-Key", config.NrAdminKey)
-	req.Header.Add("Content-Type", "application/json")
-	client := &http.Client{}
-	resp, err := client.Do(req)
-	if err != nil {
-		log.Fatal("Request error: ", err.Error())
-		return
-	}
+
+	/*
+		req, err := http.NewRequest("GET", url, nil)
+		if err != nil {
+			log.Fatal("Error setting up request:" + err.Error())
+			return
+		}
+		req.Header.Add("X-Api-Key", config.NrAdminKey)
+		req.Header.Add("Content-Type", "application/json")
+		client := &http.Client{}
+		resp, err := client.Do(req)
+		if err != nil {
+			log.Fatal("Request error: ", err.Error())
+			return
+		}
+	*/
 	if resp.StatusCode != 200 {
 		log.Fatal("Non-200 status code: ", resp.StatusCode, resp.Status)
 		return
@@ -60,9 +70,9 @@ func GetScript(id string) {
 	}
 
 	decodedScript, err := base64.StdEncoding.DecodeString(scriptPayload.ScriptText)
-		if err != nil {
-			log.Fatal("Error decoding base64 string from api", err)
-		}
+	if err != nil {
+		log.Fatal("Error decoding base64 string from api", err)
+	}
 	log.Printf("Decoded Script:\n%s\n", decodedScript)
 
 }
