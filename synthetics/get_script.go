@@ -12,6 +12,7 @@ import (
 	"log"
 
 	nrutil "github.com/brettski/go-nrutil"
+	"github.com/brettski/go-nrutil/filemanager"
 	"github.com/brettski/go-nrutil/nrrequest"
 )
 
@@ -62,7 +63,7 @@ func GetScript(id string) {
 		return
 	}
 
-	log.Printf("Encoded Script:\n%s\n", encodedScript)
+	//log.Printf("Encoded Script:\n%s\n", encodedScript)
 
 	var scriptPayload ScriptPayload
 	if err := json.Unmarshal(encodedScript, &scriptPayload); err != nil {
@@ -73,6 +74,23 @@ func GetScript(id string) {
 	if err != nil {
 		log.Fatal("Error decoding base64 string from api", err)
 	}
-	log.Printf("Decoded Script:\n%s\n", decodedScript)
+
+	//log.Printf("Decoded Script:\n%s\n", decodedScript)
+
+	config, errc := nrutil.GetConfigurationInfo()
+	if errc != nil {
+		log.Fatalf("Error getting configuration: %s", err)
+	}
+
+	fm, err := filemanager.NewFilemanager("/Users/brettski/nrsynthetcs", true)
+	if err != nil {
+		log.Fatalf("Issue creating new filemanager: %s", err)
+	}
+
+	log.Println("Writing to file")
+	err = fm.WriteFile(id, decodedScript)
+	if err != nil {
+		log.Fatalln(err)
+	}
 
 }

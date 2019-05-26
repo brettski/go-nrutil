@@ -1,11 +1,12 @@
 package nrutil
 
 import (
+	"encoding/base64"
 	"fmt"
 	"io/ioutil"
 	"os"
 	"path/filepath"
-	"encoding/base64"
+	"strings"
 
 	"github.com/mitchellh/go-homedir"
 	yaml "gopkg.in/yaml.v2"
@@ -15,6 +16,7 @@ import (
 type Config struct {
 	NrAdminKey        string   `yaml:"nradminkey"`
 	SyntheticMonitors []string `yaml:"syntheticmonitors"`
+	BasePath          string   `yaml:"basepath"`
 }
 
 // GetConfigurationInfo reads configuration from yaml in home folder
@@ -26,8 +28,11 @@ func GetConfigurationInfo() (*Config, error) {
 
 	yamlFile := filepath.Join(home, ".nrutil.yml")
 	if _, err := os.Stat(yamlFile); err != nil {
-		// file not found
-		return nil, createBaseYamlFile(yamlFile)
+		// file not found or other error
+		if os.IsNotExist(err) {
+			return nil, createBaseYamlFile(yamlFile)
+		}
+		return nil, err
 	}
 
 	data, err := ioutil.ReadFile(yamlFile)
@@ -40,19 +45,26 @@ func GetConfigurationInfo() (*Config, error) {
 		return nil, err
 	}
 
+	if err := nrconfig.Check(); err != nil {
+		return nil, err
+	}
+
 	return nrconfig, nil
 }
 
 // Check verifies that configuration has expected, needed fields
-func (c *Config) Check() error{
-	// Not sure if this is the best approach, but lets see
-	var errs string
+func (c *Config) Check() error {
+	var sb strings.Builder
 	if len(c.NrAdminKey) < 10 {
-		errs += fmt.Sprintf("NrAdminKey not set or too short\n")
+		sb.WriteString("- NrAdminKey not set or too short\n")
 	}
 
-	if len(errs) > 0 {
-		return fmt.Errorf("Configuration file check errors:\n%s", errs)
+	if strings.HasPrefix(c.NrAdminKey, "<") {
+		sb.WriteString("- NrAdminKey still set to default value. Update with your NR key")
+	}
+
+	if sb.Len() > 0 {
+		return fmt.Errorf("Configuration file check errors:\n%s", sb.String())
 	}
 	return nil
 }
