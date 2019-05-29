@@ -8,7 +8,7 @@ Cli to read and write Synthetics scripts to local files.  Built to store Synthet
 
 ## Shoutout and Thank You
 
-A thank you to the great Go community and the indiviuals and groups who provide and maintain the libraries we use! We really appreciate all your efforts.
+A thank you to the great Go community and the individuals and groups who provide and maintain the libraries we use! We really appreciate all your efforts.
 
 * Mow.Cli - A versatile library for building CLI applications in Go
   * https://github.com/jawher/mow.cli
