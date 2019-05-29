@@ -40,13 +40,10 @@ func (r *Request) Get(url string) (*http.Response, error) {
 	if err != nil {
 		return nil, err
 	}
-	if err := config.Check(); err != nil {
-		return nil, err
-	}
 
 	req, err := http.NewRequest("GET", url, nil)
 	if err != nil {
-		log.Fatalf("Error creating NewRequest: %s", err)
+		log.Fatalf("Error creating NewRequest: %s\n", err)
 	}
 	req.Header.Add("X-Api-Key", config.NrAdminKey)
 	req.Header.Add("Content-Type", "application/json")

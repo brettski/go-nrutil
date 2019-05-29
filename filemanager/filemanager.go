@@ -2,9 +2,13 @@ package filemanager
 
 import (
 	"fmt"
+	"io/ioutil"
 	"log"
 	"os"
 	"path/filepath"
+	"strings"
+
+	"github.com/mitchellh/go-homedir"
 )
 
 // Filemanager struct maintains path and current file
@@ -20,6 +24,14 @@ func NewFilemanager(basepath string, isCreate bool) (*Filemanager, error) {
 		fileInfo os.FileInfo
 		err      error
 	)
+
+	if strings.HasPrefix(basepath, "~") {
+		basepath, err = homedir.Expand(basepath)
+	}
+	if err != nil {
+		return nil, fmt.Errorf("error getting home directory: %s", err)
+	}
+
 	fileInfo, err = os.Stat(basepath)
 	if err != nil {
 		if os.IsNotExist(err) && isCreate {
@@ -94,4 +106,27 @@ func (fm *Filemanager) WriteFile(filename string, data []byte) error {
 
 	log.Printf("Wrote %d bytes to %s", writtenb, wfile.Name())
 	return nil
+}
+
+// ReadFile reads from a file for provided filename
+// File path is determined by Filemanager.BasePath
+func (fm *Filemanager) ReadFile(filename string) (data []byte, err error) {
+	if len(filename) < 1 {
+		return nil, fmt.Errorf("ReadFile, filename cannot be an empty string")
+	}
+
+	fullfile := filepath.Join(fm.BasePath, filename)
+	log.Println("fullfile: ", fullfile)
+
+	rfile, err := os.Open(fullfile)
+	if err != nil {
+		return nil, fmt.Errorf("Error opening file: %s", err)
+	}
+
+	data, err = ioutil.ReadAll(rfile)
+	if err != nil {
+		return nil, fmt.Errorf("Error reading file: %s", err)
+	}
+
+	return data, nil
 }

@@ -23,9 +23,6 @@ func GetScript(id string) {
 	if err != nil {
 		log.Fatal(err)
 	}
-	if err := config.Check(); err != nil {
-		log.Fatal(err)
-	}
 
 	baseURL := nrutil.GetBaseConfiguration().NrBaseSyntheticsAPIURL
 	url := baseURL + fmt.Sprintf("monitors/%s/script", id)
@@ -63,7 +60,7 @@ func GetScript(id string) {
 		return
 	}
 
-	//log.Printf("Encoded Script:\n%s\n", encodedScript)
+	log.Printf("Encoded Script:\n%s\n", encodedScript)
 
 	var scriptPayload ScriptPayload
 	if err := json.Unmarshal(encodedScript, &scriptPayload); err != nil {
@@ -77,14 +74,9 @@ func GetScript(id string) {
 
 	//log.Printf("Decoded Script:\n%s\n", decodedScript)
 
-	config, errc := nrutil.GetConfigurationInfo()
-	if errc != nil {
-		log.Fatalf("Error getting configuration: %s", err)
-	}
-
-	fm, err := filemanager.NewFilemanager("/Users/brettski/nrsynthetcs", true)
+	fm, err := filemanager.NewFilemanager(config.BasePath, true)
 	if err != nil {
-		log.Fatalf("Issue creating new filemanager: %s", err)
+		log.Fatalf("Issue creating new filemanager: %s\n", err)
 	}
 
 	log.Println("Writing to file")
