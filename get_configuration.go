@@ -45,7 +45,7 @@ func GetConfigurationInfo() (*Config, error) {
 		return nil, err
 	}
 
-	if err := nrconfig.Check(); err != nil {
+	if err := nrconfig.check(); err != nil {
 		return nil, err
 	}
 
@@ -53,7 +53,7 @@ func GetConfigurationInfo() (*Config, error) {
 }
 
 // Check verifies that configuration has expected, needed fields
-func (c *Config) Check() error {
+func (c *Config) check() error {
 	var sb strings.Builder
 	if len(c.NrAdminKey) < 10 {
 		sb.WriteString("- NrAdminKey not set or too short\n")
