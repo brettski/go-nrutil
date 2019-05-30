@@ -13,10 +13,10 @@ func cmdGetScript(cmd *cli.Cmd) {
 
 	cmd.Action = func() {
 		if len(*id) < 1 {
-			fmt.Printf("id is a required parameter")
+			fmt.Printf("id is a required parameter\n\n")
 			cli.Exit(1)
 		}
-		fmt.Println("Do get script stuff", id)
+		fmt.Println("Do get script stuff", *id)
 		synthetics.GetScript(*id)
 	}
 }

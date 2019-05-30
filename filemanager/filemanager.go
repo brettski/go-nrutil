@@ -47,7 +47,7 @@ func NewFilemanager(basepath string, isCreate bool) (*Filemanager, error) {
 			return nil, err
 		}
 	}
-	log.Printf("basepath, fileinfo: %v", fileInfo)
+	//log.Printf("basepath, fileinfo: %v", fileInfo)
 
 	if !fileInfo.IsDir() {
 		return nil, fmt.Errorf("The basepath, %s, is not a directory", basepath)

@@ -12,7 +12,7 @@ func cmdSetScript(cmd *cli.Cmd) {
 
 	cmd.Action = func() {
 		if len(*id) < 1 {
-			fmt.Printf("id is a requireed parameter")
+			fmt.Printf("id is a requireed parameter\n\n")
 			cli.Exit(1)
 		}
 		fmt.Println("Do set	script stuff")
