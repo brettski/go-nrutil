@@ -25,7 +25,7 @@ func SetScript(id string) {
 
 	fm, err := filemanager.NewFilemanager(config.BasePath, false)
 	if err != nil {
-		log.Fatalf("Error creating new filemanager: %s\n", err)
+		log.Fatalf("Error creating new filemanager: %s\n\n", err)
 	}
 
 	decodedScript, err := fm.ReadFile(id)
@@ -50,14 +50,14 @@ func SetScript(id string) {
 	request, _ := nrrequest.NewRequest()
 	resp, err := request.Put(url, payload)
 	if err != nil {
-		log.Fatalf("request error %s\n", err)
+		log.Fatalf("request error %s\n\n", err)
 	}
 
 	if resp.StatusCode != 204 {
 		//log.Printf("whole resp: %+v", resp)
-		log.Fatalf("Put request was not succesful. Status: %s", resp.Status)
+		log.Fatalf("Put request was not succesful. Status: %s\n\n", resp.Status)
 	} else {
-		log.Printf("file %s successfuly sent to New Relic", id)
+		log.Printf("file %s successfuly sent to New Relic\n\n", id)
 	}
 
 }
