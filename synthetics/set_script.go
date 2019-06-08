@@ -10,27 +10,27 @@ import (
 	"fmt"
 	"log"
 
-	nrutil "github.com/brettski/go-nrutil"
 	"github.com/brettski/go-nrutil/filemanager"
 	"github.com/brettski/go-nrutil/nrrequest"
+	"github.com/brettski/go-nrutil/nrutil"
 )
 
 // SetScript processes writing a script from file to New Relic Synthetics
-func SetScript(id string) {
-	log.Println("setting script ", id)
+func SetScript(id string) error {
+	log.Println("Setting script ", id)
 	config, err := nrutil.GetConfigurationInfo()
 	if err != nil {
-		log.Fatalln(err)
+		return err
 	}
 
 	fm, err := filemanager.NewFilemanager(config.BasePath, false)
 	if err != nil {
-		log.Fatalf("Error creating new filemanager: %s\n\n", err)
+		return fmt.Errorf("Error creating new filemanager: %s", err)
 	}
 
 	decodedScript, err := fm.ReadFile(id)
 	if err != nil {
-		log.Fatalf("%s\n", err)
+		return fmt.Errorf("Error reading local script file: %s", err)
 	}
 
 	encodedScript := base64.StdEncoding.EncodeToString(decodedScript)
@@ -40,24 +40,24 @@ func SetScript(id string) {
 
 	payload, err := json.Marshal(&scriptPayload)
 	if err != nil {
-		log.Fatalf("%s", err)
+		return fmt.Errorf("Error marshaling payload into struct: %s", err)
 	}
 
 	baseURL := nrutil.GetBaseConfiguration().NrBaseSyntheticsAPIURL
 	url := baseURL + fmt.Sprintf("monitors/%s/script", id)
-	log.Println(url)
+	//log.Println(url)
 
 	request, _ := nrrequest.NewRequest()
 	resp, err := request.Put(url, payload)
 	if err != nil {
-		log.Fatalf("request error %s\n\n", err)
+		return fmt.Errorf("Request error %s", err)
 	}
 
 	if resp.StatusCode != 204 {
 		//log.Printf("whole resp: %+v", resp)
-		log.Fatalf("Put request was not succesful. Status: %s\n\n", resp.Status)
-	} else {
-		log.Printf("file %s successfuly sent to New Relic\n\n", id)
+		return fmt.Errorf("Put request was not succesful. Status: %s", resp.Status)
 	}
 
+	log.Printf("file %s successfuly sent to New Relic\n\n", id)
+	return nil
 }
