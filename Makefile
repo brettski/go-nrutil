@@ -8,7 +8,7 @@ SCRIPT_ID=0
 
 all: test build
 build:
-	$(GOBUILD) -o $(BINARY_FOLDER)/nrutil ./command/.
+	$(GOBUILD) -o $(BINARY_FOLDER)/nrutil .
 
 test:
 	$(GOTEST) ./...
@@ -18,4 +18,4 @@ clean:
 	rm -f $(BINARY_FOLDER)/*
 
 run:
-	$(GORUN) ./command/. getscript --id $(SCRIPT_ID)
+	$(GORUN) . getscript --id $(SCRIPT_ID)

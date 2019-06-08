@@ -10,9 +10,10 @@ import (
 	"fmt"
 	"log"
 
-	nrutil "github.com/brettski/go-nrutil"
+	//nrutil "github.com/brettski/go-nrutil"
 	"github.com/brettski/go-nrutil/filemanager"
 	"github.com/brettski/go-nrutil/nrrequest"
+	"github.com/brettski/go-nrutil/nrutil"
 )
 
 // SetScript processes writing a script from file to New Relic Synthetics

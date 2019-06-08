@@ -5,7 +5,7 @@ import (
 	"log"
 	"net/http"
 
-	"github.com/brettski/go-nrutil"
+	"github.com/brettski/go-nrutil/nrutil"
 )
 
 // Get performs a GET request for provided URL

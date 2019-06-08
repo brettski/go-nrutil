@@ -11,9 +11,10 @@ import (
 	"io/ioutil"
 	"log"
 
-	nrutil "github.com/brettski/go-nrutil"
+	//nrutil "github.com/brettski/go-nrutil"
 	"github.com/brettski/go-nrutil/filemanager"
 	"github.com/brettski/go-nrutil/nrrequest"
+	"github.com/brettski/go-nrutil/nrutil"
 )
 
 // GetScript start process for getting a script from New Relic Synthetics

@@ -6,7 +6,7 @@ import (
 	"log"
 	"net/http"
 
-	"github.com/brettski/go-nrutil"
+	"github.com/brettski/go-nrutil/nrutil"
 )
 
 // Put performs a PUT request for the provided nr api url
