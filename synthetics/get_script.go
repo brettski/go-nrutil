@@ -11,64 +11,61 @@ import (
 	"io/ioutil"
 	"log"
 
-	//nrutil "github.com/brettski/go-nrutil"
 	"github.com/brettski/go-nrutil/filemanager"
 	"github.com/brettski/go-nrutil/nrrequest"
 	"github.com/brettski/go-nrutil/nrutil"
 )
 
 // GetScript start process for getting a script from New Relic Synthetics
-func GetScript(id string) {
+func GetScript(id string) error {
 	log.Println("Getting script ", id)
 	config, err := nrutil.GetConfigurationInfo()
 	if err != nil {
-		log.Fatal(err)
+		return err
 	}
 
 	baseURL := nrutil.GetBaseConfiguration().NrBaseSyntheticsAPIURL
 	url := baseURL + fmt.Sprintf("monitors/%s/script", id)
-	log.Println(url)
+	//log.Println(url)
 
 	request, _ := nrrequest.NewRequest()
 
 	resp, err := request.Get(url)
 	if err != nil {
-		log.Fatalf("Request error %s", err)
+		return fmt.Errorf("Request error %s", err)
 	}
 
 	if resp.StatusCode != 200 {
-		log.Fatalf("Non-200 status code: %s\n\n", resp.Status)
-		return
+		return fmt.Errorf("Non-200 status code: %s", resp.Status)
 	}
 	encodedScript, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
-		log.Fatalf("Error reading body (json) %s\n\n", err)
-		return
+		return fmt.Errorf("Error reading body (json) %s", err)
 	}
 
 	//log.Printf("Encoded Script:\n%s\n", encodedScript)
 
 	var scriptPayload ScriptPayload
 	if err := json.Unmarshal(encodedScript, &scriptPayload); err != nil {
-		log.Fatalf("Unable to unmarshal json: %s\n\n", err)
+		return fmt.Errorf("Unable to unmarshal json: %s", err)
 	}
 
 	decodedScript, err := base64.StdEncoding.DecodeString(scriptPayload.ScriptText)
 	if err != nil {
-		log.Fatalf("Error decoding base64 string from api: %s\n\n", err)
+		return fmt.Errorf("Error decoding base64 string from api: %s", err)
 	}
 
 	//log.Printf("Decoded Script:\n%s\n", decodedScript)
 
 	fm, err := filemanager.NewFilemanager(config.BasePath, true)
 	if err != nil {
-		log.Fatalf("Issue creating new filemanager: %s\n\n", err)
+		return fmt.Errorf("Issue creating new filemanager: %s", err)
 	}
 
-	log.Println("Writing to file")
 	err = fm.WriteFile(id, decodedScript)
 	if err != nil {
-		log.Fatalln(err)
+		return fmt.Errorf("Error write to file: %s", err)
 	}
-	log.Printf("file successfully written\n\n")
+	log.Printf("File successfully written\n\n")
+	return nil
 }

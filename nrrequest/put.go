@@ -3,7 +3,7 @@ package nrrequest
 
 import (
 	"bytes"
-	"log"
+	"fmt"
 	"net/http"
 
 	"github.com/brettski/go-nrutil/nrutil"
@@ -18,7 +18,7 @@ func (r *Request) Put(url string, data []byte) (*http.Response, error) {
 
 	req, err := http.NewRequest("PUT", url, bytes.NewBuffer(data))
 	if err != nil {
-		log.Fatalf("Error creating newRequest: %s\n", err)
+		return nil, fmt.Errorf("Error creating newRequest: %s", err)
 	}
 
 	req.Header.Add("X-Api-Key", config.NrAdminKey)
@@ -26,8 +26,7 @@ func (r *Request) Put(url string, data []byte) (*http.Response, error) {
 
 	resp, err := r.client.Do(req)
 	if err != nil {
-		log.Printf("Error sending request: %s\n", err)
-		return nil, err
+		return nil, fmt.Errorf("Error sending request: %s", err)
 	}
 
 	return resp, nil

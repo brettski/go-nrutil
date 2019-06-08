@@ -8,10 +8,10 @@ import (
 
 func main() {
 
-	app := cli.App("nrutil", "New Relic Synthetics utility")
+	app := cli.App("nrutil", "New Relic Synthetics Utility")
 	app.Version("v version", "0.1.0")
-	app.Command("getscript", "Retrieves script from Synthetic monitor to local file", cmdGetScript)
-	app.Command("setscript", "Saves script from local file to Synthetic monitor", cmdSetScript)
+	app.Command("getscript", "Retrieves script from Synthetics monitor to local file", cmdGetScript)
+	app.Command("setscript", "Saves script from local file to Synthetics monitor", cmdSetScript)
 
 	app.Run(os.Args)
 

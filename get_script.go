@@ -1,22 +1,25 @@
 package main
 
 import (
-	"fmt"
-
-	cli "github.com/jawher/mow.cli"
+	"log"
 
 	"github.com/brettski/go-nrutil/synthetics"
+	cli "github.com/jawher/mow.cli"
 )
 
 func cmdGetScript(cmd *cli.Cmd) {
-	id := cmd.StringOpt("id", "", "The id of the Synthetic to get the script from. Ignores config file")
+	id := cmd.StringOpt("id", "", "A specfic id of a Synthetic monitor to get a script from. Using this overrides config file")
 
 	cmd.Action = func() {
 		if len(*id) < 1 {
-			fmt.Printf("id is a required parameter\n\n")
+			log.Printf("id is a required parameter\n\n")
 			cli.Exit(1)
 		}
-		fmt.Println("Do get script stuff", *id)
-		synthetics.GetScript(*id)
+		log.Println("Do 'get script' stuff")
+		err := synthetics.GetScript(*id)
+		if err != nil {
+			log.Fatalln(err)
+			cli.Exit(2)
+		}
 	}
 }

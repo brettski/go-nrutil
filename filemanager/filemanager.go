@@ -52,7 +52,7 @@ func NewFilemanager(basepath string, isCreate bool) (*Filemanager, error) {
 	if !fileInfo.IsDir() {
 		return nil, fmt.Errorf("The basepath, %s, is not a directory", basepath)
 	}
-	log.Println("sending struct")
+
 	return &Filemanager{
 		BasePath: basepath,
 	}, nil
@@ -62,7 +62,8 @@ func NewFilemanager(basepath string, isCreate bool) (*Filemanager, error) {
 // filename is the name of file to check if exists
 func (fm *Filemanager) Exists(filename string) bool {
 	if len(filename) < 1 && fm.currentfile == nil {
-		log.Printf("No filename provided or available to check if exists")
+		log.Println("No filename provided check if exists")
+		return false
 	}
 
 	// set new filename
@@ -71,12 +72,11 @@ func (fm *Filemanager) Exists(filename string) bool {
 		if os.IsNotExist(err) {
 			return false
 		}
-		log.Fatal("Unable to access file. ", err)
+		fmt.Println("[WARN] Unable to access file. ", err)
 		return false
 	}
 	fm.currentfile = &fileinfo
 	return true
-
 }
 
 // WriteFile write a new or overwrites a current file indicated by filename.
@@ -87,7 +87,7 @@ func (fm *Filemanager) WriteFile(filename string, data []byte) error {
 	}
 
 	fullfile := filepath.Join(fm.BasePath, filename)
-	log.Printf("fullfile: %s", fullfile)
+	//log.Printf("full file path: %s", fullfile)
 
 	wfile, err := os.OpenFile(
 		fullfile,
@@ -95,20 +95,20 @@ func (fm *Filemanager) WriteFile(filename string, data []byte) error {
 		os.ModePerm,
 	)
 	if err != nil {
-		return err
+		return fmt.Errorf("Error opening file for writing: %s", err)
 	}
 	defer wfile.Close()
 
 	writtenb, err := wfile.Write(data)
 	if err != nil {
-		return err
+		return fmt.Errorf("Error writing data to file: %s", err)
 	}
 
 	log.Printf("Wrote %d bytes to %s", writtenb, wfile.Name())
 	return nil
 }
 
-// ReadFile reads from a file for provided filename
+// ReadFile opens a file for reading returning it's byte slice for provided filename
 // File path is determined by Filemanager.BasePath
 func (fm *Filemanager) ReadFile(filename string) (data []byte, err error) {
 	if len(filename) < 1 {
@@ -116,7 +116,7 @@ func (fm *Filemanager) ReadFile(filename string) (data []byte, err error) {
 	}
 
 	fullfile := filepath.Join(fm.BasePath, filename)
-	log.Println("fullfile: ", fullfile)
+	//log.Println("fullfile: ", fullfile)
 
 	rfile, err := os.Open(fullfile)
 	if err != nil {
