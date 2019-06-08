@@ -12,6 +12,7 @@ func main() {
 	app.Version("v version", "0.1.0")
 	app.Command("getscript", "Retrieves script from Synthetics monitor to local file", cmdGetScript)
 	app.Command("setscript", "Saves script from local file to Synthetics monitor", cmdSetScript)
+	app.Command("listscripts", "Retrieves a list of all synthetic monitors in API key's account", cmdListScripts)
 
 	app.Run(os.Args)
 
