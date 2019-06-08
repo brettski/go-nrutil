@@ -92,7 +92,7 @@ func (fm *Filemanager) WriteFile(filename string, data []byte) error {
 	wfile, err := os.OpenFile(
 		fullfile,
 		os.O_WRONLY|os.O_TRUNC|os.O_CREATE,
-		0666,
+		os.ModePerm,
 	)
 	if err != nil {
 		return err
