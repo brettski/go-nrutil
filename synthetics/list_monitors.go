@@ -2,21 +2,18 @@ package synthetics
 
 import (
 	"fmt"
-	"sort"
 
 	"github.com/apcera/termtables"
 )
 
-// ListScripts retrieves all synthetics monitors
-func ListScripts() (string, error) {
+// ListMonitors shows all monitors configured in account sorted by type
+func ListMonitors() (string, error) {
 	monitorlist, err := GetAllMonitors()
 	if err != nil {
 		return "", err
 	}
 
-	sort.Slice(monitorlist.Monitors, func(a, b int) bool {
-		return monitorlist.Monitors[a].MonitorType < monitorlist.Monitors[b].MonitorType
-	})
+	monitorlist.SortByType(true)
 
 	// build table
 	table := termtables.CreateTable()

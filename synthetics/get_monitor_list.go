@@ -5,6 +5,8 @@ import (
 	"fmt"
 	"io/ioutil"
 	"log"
+	"sort"
+	"strings"
 
 	"github.com/brettski/go-nrutil/nrrequest"
 	"github.com/brettski/go-nrutil/nrutil"
@@ -28,6 +30,40 @@ type SyntheticMonitor struct {
 	Created      string  `json:"createdAt"`
 	Modified     string  `json:"modifiedAt"`
 	ApiVersion   string  `json"apiVersion"`
+}
+
+// SortByType sorts SyntheticMonitors.Monitors slice
+func (s SyntheticMonitors) SortByType(isDecending bool) {
+	sort.Slice(s.Monitors, func(a, b int) bool {
+		if isDecending {
+			return s.Monitors[a].MonitorType < s.Monitors[b].MonitorType
+		} else {
+			return s.Monitors[a].MonitorType > s.Monitors[b].MonitorType
+		}
+	})
+}
+
+// MonitorTypeFilter is available ways to filter SynetheicMonitors.Monitors slice
+type MonitorTypeFilter string
+
+const (
+	AnyScript MonitorTypeFilter = "SCRIPT"
+	Browser   MonitorTypeFilter = "SCRIPT_BROWSER"
+	API       MonitorTypeFilter = "SCRIPT_API"
+)
+
+// Filter filters current SyntheticMonitors.Monitors slice by filter type
+func (s *SyntheticMonitors) Filter(f MonitorTypeFilter) {
+	var filtered []SyntheticMonitor
+	for _, v := range s.Monitors {
+		if strings.HasPrefix(v.MonitorType, string(f)) {
+			filtered = append(filtered, v)
+		}
+	}
+	//log.Println("Lenth of filtered: ", filtered)
+	if len(filtered) > 0 {
+		s.Monitors = filtered
+	}
 }
 
 // GetAllMonitors retrieves all Syntetic monitors from NR API

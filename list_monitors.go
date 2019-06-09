@@ -7,9 +7,10 @@ import (
 	cli "github.com/jawher/mow.cli"
 )
 
-func cmdListScripts(cmd *cli.Cmd) {
+func cmdListMonitors(cmd *cli.Cmd) {
+
 	cmd.Action = func() {
-		_, err := synthetics.ListScripts()
+		_, err := synthetics.ListMonitors()
 		if err != nil {
 			log.Fatalln(err)
 			cli.Exit(2)
