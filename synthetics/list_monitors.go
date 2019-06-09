@@ -7,7 +7,7 @@ import (
 )
 
 // ListMonitors shows all monitors configured in account sorted by type
-func ListMonitors() (string, error) {
+func ListMonitors(showFullId bool) (string, error) {
 	monitorlist, err := GetAllMonitors()
 	if err != nil {
 		return "", err
@@ -19,8 +19,14 @@ func ListMonitors() (string, error) {
 	table := termtables.CreateTable()
 	table.AddHeaders("Id", "Name", "Monitor Type", "Status")
 	for _, monitor := range monitorlist.Monitors {
+		var displayid string
+		if showFullId {
+			displayid = monitor.Id
+		} else {
+			displayid = monitor.Id[0:9]
+		}
 		table.AddRow(
-			monitor.Id[0:9],
+			displayid,
 			monitor.Name,
 			monitor.MonitorType,
 			monitor.Status,
