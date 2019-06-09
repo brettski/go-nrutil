@@ -13,7 +13,7 @@ func cmdListMonitors(cmd *cli.Cmd) {
 	cmd.Action = func() {
 		_, err := synthetics.ListMonitors(*fullid)
 		if err != nil {
-			log.Fatalln(err)
+			log.Println(err)
 			cli.Exit(2)
 		}
 	}

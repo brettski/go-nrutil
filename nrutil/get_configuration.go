@@ -26,7 +26,7 @@ func GetConfigurationInfo() (*Config, error) {
 		return nil, err
 	}
 
-	yamlFile := filepath.Join(home, ".nrutil.yml")
+	yamlFile := filepath.Join(home, GetBaseConfiguration().DefaultConfigFileName)
 	if _, err := os.Stat(yamlFile); err != nil {
 		// file not found or other error
 		if os.IsNotExist(err) {
@@ -70,9 +70,8 @@ func (c *Config) check() error {
 }
 
 func createBaseYamlFile(yamlfile string) error {
-	//ymldata := []byte("---\nnradminkey: <your-admin-key>\nsyntheticmonitors:\n  - guid-of-monitor-1-23456\n  - guid-of-monitor-2-34567\n  - guid-of-monitor-n-opqrs")
 	// yaml base file at /config_base.yaml
-	ymldataEncoded := "LS0tDQpucmFkbWlua2V5OiA8eW91ci1hZG1pbi1rZXk+DQpzeW50aGV0aWNtb25pdG9yczoNCiAgLSBndWlkLW9mLW1vbml0b3ItMS0yMzQ1Ng0KICAtIGd1aWQtb2YtbW9uaXRvci0yLTM0NTY3DQogIC0gZ3VpZC1vZi1tb25pdG9yLW4tb3BxcnMgDQogIA=="
+	ymldataEncoded := "LS0tCm5yYWRtaW5rZXk6IDx5b3VyLWFkbWluLWtleT4KYmFzZXBhdGg6IH4vbnJzeW50aGV0aWNzCnN5bnRoZXRpY21vbml0b3JzOgogIC0gZ3VpZC1vZi1tb25pdG9yLTEtMjM0NTYKICAtIGd1aWQtb2YtbW9uaXRvci0yLTM0NTY3CiAgLSBndWlkLW9mLW1vbml0b3Itbi1vcHFycyAK"
 
 	ymlDecoded, err := base64.StdEncoding.DecodeString(ymldataEncoded)
 	if err != nil {
@@ -94,4 +93,31 @@ func createBaseYamlFile(yamlfile string) error {
     Please add you New Relic User Admin key and Synthetic monitor GUID's to manage.
     Once set, run this again.
     `, yamlfile)
+}
+
+// GetConfigurationFile opens configuration file and returns a byte slice of contents, or error if not exist
+func GetConfigurationFile() (data []byte, yamlFile string, err error) {
+	var (
+		home string
+	)
+
+	home, err = homedir.Dir()
+	if err != nil {
+		return nil, "", err
+	}
+
+	yamlFile = filepath.Join(home, GetBaseConfiguration().DefaultConfigFileName)
+	if _, err = os.Stat(yamlFile); err != nil {
+		if os.IsNotExist(err) {
+			return nil, "", fmt.Errorf("Configuration file not found in home directory: %s", yamlFile)
+		}
+		return nil, "", err
+	}
+
+	data, err = ioutil.ReadFile(yamlFile)
+	if err != nil {
+		return nil, "", err
+	}
+
+	return
 }
