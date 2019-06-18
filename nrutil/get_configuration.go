@@ -21,24 +21,13 @@ type Config struct {
 
 // GetConfigurationInfo reads configuration from yaml in home folder
 func GetConfigurationInfo() (*Config, error) {
-	home, err := homedir.Dir()
-	if err != nil {
-		return nil, err
-	}
 
-	yamlFile := filepath.Join(home, GetBaseConfiguration().DefaultConfigFileName)
-	if _, err := os.Stat(yamlFile); err != nil {
-		// file not found or other error
-		if os.IsNotExist(err) {
-			return nil, createBaseYamlFile(yamlFile)
-		}
-		return nil, err
+	data, yamlFile, err := GetConfigurationFile()
+	// file not found or other error
+	if os.IsNotExist(err) {
+		return nil, createBaseYamlFile(yamlFile)
 	}
-
-	data, err := ioutil.ReadFile(yamlFile)
-	if err != nil {
-		return nil, err
-	}
+	return nil, err
 
 	nrconfig := &Config{}
 	if err := yaml.Unmarshal(data, nrconfig); err != nil {
@@ -60,7 +49,7 @@ func (c *Config) check() error {
 	}
 
 	if strings.HasPrefix(c.NrAdminKey, "<") {
-		sb.WriteString("- NrAdminKey still set to default value. Update with your NR key")
+		sb.WriteString("- NrAdminKey still set to default value. Update with your NR Admin API key")
 	}
 
 	if sb.Len() > 0 {
@@ -71,7 +60,7 @@ func (c *Config) check() error {
 
 func createBaseYamlFile(yamlfile string) error {
 	// yaml base file at /config_base.yaml
-	ymldataEncoded := "LS0tCm5yYWRtaW5rZXk6IDx5b3VyLWFkbWluLWtleT4KYmFzZXBhdGg6IH4vbnJzeW50aGV0aWNzCnN5bnRoZXRpY21vbml0b3JzOgogIC0gZ3VpZC1vZi1tb25pdG9yLTEtMjM0NTYKICAtIGd1aWQtb2YtbW9uaXRvci0yLTM0NTY3CiAgLSBndWlkLW9mLW1vbml0b3Itbi1vcHFycyAK"
+	ymldataEncoded := GetBaseConfiguration().DefaultConfigYaml
 
 	ymlDecoded, err := base64.StdEncoding.DecodeString(ymldataEncoded)
 	if err != nil {
@@ -89,8 +78,8 @@ func createBaseYamlFile(yamlfile string) error {
 
 	return fmt.Errorf(`
     The configuration yaml file was not in place.
-    A new one is now at %s.
-    Please add you New Relic User Admin key and Synthetic monitor GUID's to manage.
+    A new file was created at %s.
+    Please add your New Relic User Admin key, base path and Synthetics monitor GUID's you wish to manage.
     Once set, run this again.
     `, yamlfile)
 }
@@ -109,14 +98,14 @@ func GetConfigurationFile() (data []byte, yamlFile string, err error) {
 	yamlFile = filepath.Join(home, GetBaseConfiguration().DefaultConfigFileName)
 	if _, err = os.Stat(yamlFile); err != nil {
 		if os.IsNotExist(err) {
-			return nil, "", fmt.Errorf("Configuration file not found in home directory: %s", yamlFile)
+			return nil, yamlFile, err
 		}
-		return nil, "", err
+		return nil, yamlFile, err
 	}
 
 	data, err = ioutil.ReadFile(yamlFile)
 	if err != nil {
-		return nil, "", err
+		return nil, yamlFile, err
 	}
 
 	return
