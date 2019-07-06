@@ -27,7 +27,6 @@ func GetConfigurationInfo() (*Config, error) {
 	if os.IsNotExist(err) {
 		return nil, createBaseYamlFile(yamlFile)
 	}
-	return nil, err
 
 	nrconfig := &Config{}
 	if err := yaml.Unmarshal(data, nrconfig); err != nil {
