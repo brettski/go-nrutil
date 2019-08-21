@@ -3,7 +3,7 @@ package synthetics
 import (
 	"fmt"
 
-	"github.com/apcera/termtables"
+	termtables "github.com/brettski/go-termtables"
 )
 
 // ListMonitors shows all monitors configured in account sorted by type

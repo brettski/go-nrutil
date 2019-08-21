@@ -19,7 +19,9 @@ Modules used in this project:
 * go-yaml - YAML support for the Go language.
   * https://github.com/go-yaml/yaml
 * Termtables - Go ASCII Table Generator, ported from the Ruby terminal-tables library
-  * github.com/apcera/termtables
+  * ~~github.com/apcera/termtables~~
+  * github.com/brettski/go-termtables
+    * Apcera deleted termtables from GitHub so I retored the repo for others to use
 
 ## Usage
 
