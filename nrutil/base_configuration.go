@@ -4,7 +4,7 @@ package nrutil
 type BaseConfiguration struct {
 	NrBaseSyntheticsAPIURL string
 	DefaultConfigFileName  string
-	DefaultConfigYaml      string
+	DefaultConfig          Config
 }
 
 // GetBaseConfiguration returns struct with values
@@ -12,6 +12,14 @@ func GetBaseConfiguration() *BaseConfiguration {
 	return &BaseConfiguration{
 		NrBaseSyntheticsAPIURL: "https://synthetics.newrelic.com/synthetics/api/v3/",
 		DefaultConfigFileName:  ".nrutil.yml",
-		DefaultConfigYaml:      "LS0tCm5yYWRtaW5rZXk6IDx5b3VyLWFkbWluLWtleT4KYmFzZXBhdGg6IH4vbnJzeW50aGV0aWNzCnN5bnRoZXRpY21vbml0b3JzOgogIC0gZ3VpZC1vZi1tb25pdG9yLTEtMjM0NTYKICAtIGd1aWQtb2YtbW9uaXRvci0yLTM0NTY3CiAgLSBndWlkLW9mLW1vbml0b3Itbi1vcHFycyAK",
+		DefaultConfig: Config{
+			NrAdminKey: "<your-admin-key>",
+			BasePath:   "~/nrsynthetics",
+			SyntheticMonitors: []string{
+				"uuid-of-monitor-1-23456",
+				"uuid-of-monitor-2-34567",
+				"uuid-of-monitor-n-opqrs",
+			},
+		},
 	}
 }

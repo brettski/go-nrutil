@@ -1,7 +1,6 @@
 package nrutil
 
 import (
-	"encoding/base64"
 	"fmt"
 	"io/ioutil"
 	"os"
@@ -15,8 +14,8 @@ import (
 // Config is configuration struct read from yaml
 type Config struct {
 	NrAdminKey        string   `yaml:"nradminkey"`
-	SyntheticMonitors []string `yaml:"syntheticmonitors"`
 	BasePath          string   `yaml:"basepath"`
+	SyntheticMonitors []string `yaml:"syntheticmonitors"`
 }
 
 // GetConfigurationInfo reads configuration from yaml in home folder
@@ -58,12 +57,9 @@ func (c *Config) check() error {
 }
 
 func createBaseYamlFile(yamlfile string) error {
-	// yaml base file at /config_base.yaml
-	ymldataEncoded := GetBaseConfiguration().DefaultConfigYaml
-
-	ymlDecoded, err := base64.StdEncoding.DecodeString(ymldataEncoded)
+	ymlDecoded, err := yaml.Marshal(&GetBaseConfiguration().DefaultConfig)
 	if err != nil {
-		return fmt.Errorf("Unable to decode ymldata to create default file. %s", err.Error())
+		return fmt.Errorf("Unable to marshal default config. %s", err.Error())
 	}
 
 	f, err := os.Create(yamlfile)
