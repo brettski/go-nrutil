@@ -1,5 +1,12 @@
 package nrutil
 
+// Config is configuration struct read from yaml
+type Config struct {
+	NrAdminKey        string   `yaml:"nradminkey"`
+	BasePath          string   `yaml:"basepath"`
+	SyntheticMonitors []string `yaml:"syntheticmonitors"`
+}
+
 // BaseConfiguration holds base conifiguration items for application
 type BaseConfiguration struct {
 	NrBaseSyntheticsAPIURL string
