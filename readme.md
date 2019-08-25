@@ -1,6 +1,6 @@
 # go-nrutil
 
-[![release](https://img.shields.io/badge/Experimental-v0.1.0-yellow.svg)](https://github.com/brettski/go-nrutil)
+[![release](https://img.shields.io/badge/Experimental-v0.1.0-yellow.svg)](https://github.com/brettski/go-nrutil) [![Go Report Card](https://goreportcard.com/badge/github.com/brettski/go-nrutil)](https://goreportcard.com/report/github.com/brettski/go-nrutil)
 
 ## New Relic utility
 
