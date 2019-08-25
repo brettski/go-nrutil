@@ -17,7 +17,8 @@ func GetConfigurationInfo() (*Config, error) {
 	data, yamlFile, err := GetConfigurationFile()
 	// file not found or other error
 	if os.IsNotExist(err) {
-		return nil, createBaseYamlFile(yamlFile)
+		//return nil, createMissingBaseYamlFile(yamlFile)
+		return nil, fmt.Errorf("Configuration file not found. Use config command to create a base file in home directory 'nrutil config create -h' or see docs. File name: %s", yamlFile)
 	}
 
 	nrconfig := &Config{}
@@ -51,16 +52,8 @@ func (c *Config) check() error {
 
 // GetConfigurationFile opens configuration file and returns a byte slice of contents, or error if not exist
 func GetConfigurationFile() (data []byte, yamlFile string, err error) {
-	var (
-		home string
-	)
 
-	home, err = homedir.Dir()
-	if err != nil {
-		return nil, "", err
-	}
-
-	yamlFile = filepath.Join(home, GetBaseConfiguration().DefaultConfigFileName)
+	yamlFile = GetConfigurationFileLocation()
 	if _, err = os.Stat(yamlFile); err != nil {
 		if os.IsNotExist(err) {
 			return nil, yamlFile, err
@@ -74,4 +67,17 @@ func GetConfigurationFile() (data []byte, yamlFile string, err error) {
 	}
 
 	return
+}
+
+// GetConfigurationFileLocation returns users $HOME + default config file name
+// Will return only default filename if home lookup fails
+func GetConfigurationFileLocation() string {
+	defaultName := GetBaseConfiguration().DefaultConfigFileName
+	home, err := homedir.Dir()
+	if err != nil {
+		fmt.Printf("[warn] User home directory lookup errored: %s", err.Error())
+		return defaultName
+	}
+
+	return filepath.Join(home, defaultName)
 }

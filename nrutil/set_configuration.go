@@ -7,20 +7,51 @@ import (
 	yaml "gopkg.in/yaml.v2"
 )
 
-func createBaseYamlFile(yamlfile string) error {
+// CreateBaseConfigFile creates a new base configuration file in $HOME folder
+func CreateBaseConfigFile(NrAdminKey string) error {
 
-	if err := setConfigurationInfo(&GetBaseConfiguration().DefaultConfig, yamlfile); err != nil {
+	baseConfig := GetBaseConfiguration().DefaultConfig
+	yamlfile := GetConfigurationFileLocation()
+
+	if len(NrAdminKey) > 1 {
+		baseConfig.NrAdminKey = NrAdminKey
+	}
+
+	if err := SetConfigurationInfo(&baseConfig, yamlfile); err != nil {
 		return fmt.Errorf("Unable to marshal default config. %s", err.Error())
 	}
-	return fmt.Errorf(`
-    The configuration yaml file was not in place.
-    A new file was created at %s.
-    Please add your New Relic User Admin key, base path and Synthetics monitor GUID's you wish to manage.
-    Once set, run this again.
-    `, yamlfile)
+	fmt.Printf("New base configuration file set at: %s\n\n", yamlfile)
+	return nil
 }
 
-func setConfigurationInfo(configuration *Config, yamlfile string) error {
+// SafeCreateBaseConfigFile safely creates configuration file only overwriting if Force is true
+func SafeCreateBaseConfigFile(Force bool, NrAdminKey string) error {
+	configfile := GetConfigurationFileLocation()
+	FileInfo, err := os.Stat(configfile)
+	if err != nil {
+		if os.IsNotExist(err) {
+			return CreateBaseConfigFile(NrAdminKey)
+		}
+		return err
+	}
+	if FileInfo != nil && Force { // a file is found no error returned from stat()
+		return CreateBaseConfigFile(NrAdminKey)
+	}
+	return fmt.Errorf("Configuration file already exists. Use --force flag to overwrite")
+
+	/*
+		fmt.Printf("Force %v\n", Force)
+		configfile = GetConfigurationFileLocation()
+		finfo, err = os.Stat(configfile)
+		fmt.Printf("locat %s\n", configfile)
+		fmt.Printf("Exist %v\n", os.IsExist(err))
+		fmt.Printf("noexi %v\n", os.IsNotExist(err))
+		fmt.Printf("Info: %+v\n", finfo)
+	*/
+}
+
+// SetConfigurationInfo writes out configuration file from provided config struct instance
+func SetConfigurationInfo(configuration *Config, yamlfile string) error {
 	yamlBytes, err := yaml.Marshal(&configuration)
 	if err != nil {
 		return fmt.Errorf("Unable to marshal Config object to yaml byte array: %s", err.Error())

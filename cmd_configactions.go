@@ -31,9 +31,14 @@ func cmdDump(cmd *cli.Cmd) {
 }
 
 func cmdCreateConfigFile(cmd *cli.Cmd) {
-	//force := cmd.BoolOpt("f force", false, "Force overwrite if file already exists.")
-	cmd.Action = func() {
+	force := cmd.BoolOpt("f force", false, "Force overwrite if file already exists.")
+	nrkey := cmd.StringOpt("nradminkey", "", "New Relic Admin Key to add with new config file")
 
+	cmd.Action = func() {
+		if err := nrutil.SafeCreateBaseConfigFile(*force, *nrkey); err != nil {
+			log.Printf("Unable to create new configuration file. Reason: %s\n", err.Error())
+			cli.Exit(4)
+		}
 	}
 }
 
