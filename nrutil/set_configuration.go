@@ -28,7 +28,7 @@ func setConfigurationInfo(configuration *Config, yamlfile string) error {
 
 	// Open the file, create if it doesn't exist. Overwrite current contents
 
-	f, err := os.OpenFile(yamlfile, os.O_CREATE|os.O_RDWR, 0644)
+	f, err := os.OpenFile(yamlfile, os.O_CREATE|os.O_RDWR, os.ModePerm)
 	if err != nil {
 		return fmt.Errorf("Error opening or creating configuration file: %s", err.Error())
 	}
