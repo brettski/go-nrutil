@@ -55,9 +55,9 @@ func SetScript(id string) error {
 
 	if resp.StatusCode != 204 {
 		//log.Printf("whole resp: %+v", resp)
-		return fmt.Errorf("Put request was not succesful. Status: %s", resp.Status)
+		return fmt.Errorf("Put request was not successful. Status: %s", resp.Status)
 	}
 
-	log.Printf("file %s successfuly sent to New Relic\n\n", id)
+	log.Printf("file %s successfully sent to New Relic\n\n", id)
 	return nil
 }

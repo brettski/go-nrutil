@@ -19,7 +19,7 @@ func cmdSetScript(cmd *cli.Cmd) {
 		fmt.Println("Do 'set	script' stuff")
 		err := synthetics.SetScript(*id)
 		if err != nil {
-			log.Fatalln(err)
+			log.Println(err)
 			cli.Exit(2)
 		}
 	}

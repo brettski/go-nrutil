@@ -8,11 +8,12 @@ import (
 )
 
 func cmdListMonitors(cmd *cli.Cmd) {
+	fullid := cmd.BoolOpt("fullid", false, "Display full Synthetics monitor id.")
 
 	cmd.Action = func() {
-		_, err := synthetics.ListMonitors()
+		_, err := synthetics.ListMonitors(*fullid)
 		if err != nil {
-			log.Fatalln(err)
+			log.Println(err)
 			cli.Exit(2)
 		}
 	}

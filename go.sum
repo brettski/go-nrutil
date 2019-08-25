@@ -1,5 +1,7 @@
-github.com/apcera/termtables v0.0.0-20170405184538-bcbc5dc54055 h1:IkPAzP+QjchKXXFX6LCcpDKa89b/e/0gPCUbQGWtUUY=
-github.com/apcera/termtables v0.0.0-20170405184538-bcbc5dc54055/go.mod h1:8mHYHlOef9UC51cK1/WRvE/iQVM8O8QlYFa8eh8r5I8=
+github.com/brettski/go-termtables v0.0.0-20190817160346-834c9b12e572 h1:sKDiPkleJ8UVHJZBaTVw3z9F0WZFgp60Cgd6uLsWo3Q=
+github.com/brettski/go-termtables v0.0.0-20190817160346-834c9b12e572/go.mod h1:ZgaTJNybQVUXNQW7bdJPU0cV7G87ZnVSA7U+LFQiVwY=
+github.com/brettski/go-termtables v0.0.0-20190821021029-11ee89c26aea h1:/Rkd9XZeQ8ayd1p5C2fB1BbjLoVF71xi+tr6pLFVFLM=
+github.com/brettski/go-termtables v0.0.0-20190821021029-11ee89c26aea/go.mod h1:ZgaTJNybQVUXNQW7bdJPU0cV7G87ZnVSA7U+LFQiVwY=
 github.com/davecgh/go-spew v1.1.0/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
 github.com/davecgh/go-spew v1.1.1 h1:vj9j/u1bqnvCEfJOwUhtlOARqs3+rkHYY13jYWTU97c=
 github.com/davecgh/go-spew v1.1.1/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=

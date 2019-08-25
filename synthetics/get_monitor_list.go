@@ -29,7 +29,7 @@ type SyntheticMonitor struct {
 	SlaThreshold float32 `json:"slaThreshold"`
 	Created      string  `json:"createdAt"`
 	Modified     string  `json:"modifiedAt"`
-	ApiVersion   string  `json"apiVersion"`
+	ApiVersion   string  `json:"apiVersion"`
 }
 
 // SortByType sorts SyntheticMonitors.Monitors slice
@@ -37,9 +37,8 @@ func (s SyntheticMonitors) SortByType(isDecending bool) {
 	sort.Slice(s.Monitors, func(a, b int) bool {
 		if isDecending {
 			return s.Monitors[a].MonitorType < s.Monitors[b].MonitorType
-		} else {
-			return s.Monitors[a].MonitorType > s.Monitors[b].MonitorType
 		}
+		return s.Monitors[a].MonitorType > s.Monitors[b].MonitorType
 	})
 }
 
@@ -47,9 +46,14 @@ func (s SyntheticMonitors) SortByType(isDecending bool) {
 type MonitorTypeFilter string
 
 const (
+	// AnyScript defines any type of Synthetics script
 	AnyScript MonitorTypeFilter = "SCRIPT"
-	Browser   MonitorTypeFilter = "SCRIPT_BROWSER"
-	API       MonitorTypeFilter = "SCRIPT_API"
+
+	// Browser defines any 'Browser' type Synthetics script
+	Browser MonitorTypeFilter = "SCRIPT_BROWSER"
+
+	// API defines any 'API' type Synthetics script
+	API MonitorTypeFilter = "SCRIPT_API"
 )
 
 // Filter filters current SyntheticMonitors.Monitors slice by filter type
