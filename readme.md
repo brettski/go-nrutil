@@ -57,3 +57,10 @@ In this early stage of nrutil, the list of managed Synthetics *isn't implemented
 These commands will store the file in the basepath set in the configuration file allowing you to manage them in any source control.
 
 Add any questions or bugs discovered in the [GitHub Issue Tracker](https://github.com/brettski/go-nrutil/issues)
+
+## Short-term Roadmap
+
+* Option to add Synthetics api and scripted test id's to configuration file
+* Pull scripts based on id's to local folders
+* Push scripts based on id's to New Relic
+* Use correct home folder location when creating configuration file. Currently uses default `~/`
