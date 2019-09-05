@@ -40,16 +40,16 @@ The configuration file manages the following data:
 nradminkey: <your-admin-key>
 basepath: ~/nrsynthetics
 syntheticmonitors
-  - guid-of-monitor-1-23456
-  - guid-of-monitor-2-34567
-  - guid-of-monitor-n-opqrs
+- guid-of-monitor-1-23456
+- guid-of-monitor-2-34567
+- guid-of-monitor-n-opqrs
 ```
 
-* nradminkey        - The admin API key from New Relic. Per NR: "You must use your Admin User's API key to make Synthetics REST API calls. The account's REST API key will not work."
-* basepath          - The base path to store the synthetic scripts.
-* syntheticmonitors - (not yet implemented) A list of monitors the cli is managing.
+* **nradminkey**        - The admin API key from New Relic. Per NR: "You must use your Admin User's API key to make Synthetics REST API calls. The account's REST API key will not work."
+* **basepath**          - The base path to store the synthetic scripts.
+* **syntheticmonitors** - (not yet implemented) A list of monitors the cli is managing.
 
-In this early stage of nrutil, the list of managed Synthetics isn't implemented. You can however manage Synthetic monitors individually:
+In this early stage of nrutil, the list of managed Synthetics *isn't implemented*. You can however manage Synthetic monitors individually:
 
 `nrutil getscript --id <Synthetics guid id>`  
 `nrutil setscript --id <Synthetics guid id>`
