@@ -17,7 +17,7 @@ func CreateBaseConfigFile(NrAdminKey string) error {
 		baseConfig.NrAdminKey = NrAdminKey
 	}
 
-	if err := SetConfigurationInfo(&baseConfig, yamlfile); err != nil {
+	if err := baseConfig.SetConfigurationInfo(yamlfile); err != nil {
 		return fmt.Errorf("Unable to marshal default config. %s", err.Error())
 	}
 	fmt.Printf("New base configuration file set at: %s\n\n", yamlfile)
@@ -51,7 +51,7 @@ func SafeCreateBaseConfigFile(Force bool, NrAdminKey string) error {
 }
 
 // SetConfigurationInfo writes out configuration file from provided config struct instance
-func SetConfigurationInfo(configuration *Config, yamlfile string) error {
+func (configuration *Config) SetConfigurationInfo(yamlfile string) error {
 	yamlBytes, err := yaml.Marshal(&configuration)
 	if err != nil {
 		return fmt.Errorf("Unable to marshal Config object to yaml byte array: %s", err.Error())
