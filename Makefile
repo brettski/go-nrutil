@@ -8,7 +8,8 @@ SCRIPT_ID=0
 
 all: test build
 build:
-	$(GOBUILD) -o $(BINARY_FOLDER)/nrutil .
+	$(GOCLEAN)
+	$(GOBUILD) -a -o $(BINARY_FOLDER)/nrutil .
 
 test:
 	$(GOTEST) ./...

@@ -18,7 +18,7 @@ func GetConfigurationInfo() (*Config, error) {
 	// file not found or other error
 	if os.IsNotExist(err) {
 		//return nil, createMissingBaseYamlFile(yamlFile)
-		return nil, fmt.Errorf("Configuration file not found. Use config command to create a base file in home directory 'nrutil config create -h' or see docs. File name: %s", yamlFile)
+		return nil, fmt.Errorf("Configuration file not found. Use config command to create a base file in home directory see: 'nrutil config create -h' or see docs. File name: %s", yamlFile)
 	}
 
 	nrconfig := &Config{}

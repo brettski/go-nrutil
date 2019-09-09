@@ -104,3 +104,13 @@ func GetAllMonitors() (*SyntheticMonitors, error) {
 	return &monitors, err
 
 }
+
+// SaveToConfig writes the monitors in slice, SyntheticMontiors.Monitors, to config instance. Overwrites values
+func (smonitors *SyntheticMonitors) SaveToConfig(config *nrutil.Config) error {
+	ids := make([]string, len(smonitors.Monitors))
+	for i, mon := range smonitors.Monitors {
+		ids[i] = mon.Id
+	}
+	config.SyntheticMonitors = ids
+	return nil
+}
